@@ -30,11 +30,11 @@ class Model {
 		balls = new Ball[nrOfBalls];
 		for(int i = 0; i < nrOfBalls; i++ ){
             double x = myRandom.nextDouble();
-            while (!(x > 0.3 && x < 0.7))
+            while (!(x > 0.1 && x < 0.9))
                 x = myRandom.nextDouble();
 
             double y = myRandom.nextDouble();
-            while (!(y > 0.3 && y < 0.7))
+            while (!(y > 0.1 && y < 0.9))
                 y = myRandom.nextDouble();
 
             double vx = myRandom.nextDouble();
@@ -50,7 +50,7 @@ class Model {
             if (isPosetive > 0.5) vy=vy*(-1.0);
 
             double r = myRandom.nextDouble();
-            while (!(r > 0.1 && r < 0.5))
+            while (!(r > 0.1 && r < 0.4))
                 r = myRandom.nextDouble();
 
 		    balls[i]= new Ball(width * x,height * y, vx, vy, r);
