@@ -1,6 +1,7 @@
 package bouncing_balls;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * The physics model.
@@ -17,20 +18,56 @@ class Model {
 	double areaWidth, areaHeight, GRAVITY = -9.82;
 
 	Ball [] balls;
+	Boolean [][] collisionOK;
+	int nrOfBalls = 4;
+	Random myRandom = new Random();
 
 	Model(double width, double height) {
 		areaWidth = width;
 		areaHeight = height;
 
 		// Initialize the model with a few balls
-		balls = new Ball[2];
-		balls[0] = new Ball(width / 3, height * 0.9, .3, .4, 0.2);
-		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);
+		balls = new Ball[nrOfBalls];
+		for(int i = 0; i < nrOfBalls; i++ ){
+            double x = myRandom.nextDouble();
+            while (!(x > 0.3 && x < 0.7))
+                x = myRandom.nextDouble();
+
+            double y = myRandom.nextDouble();
+            while (!(y > 0.3 && y < 0.7))
+                y = myRandom.nextDouble();
+
+            double vx = myRandom.nextDouble();
+            while (!(vx > 0.3 && vx < 0.7))
+                vx = myRandom.nextDouble();
+            double isPosetive = myRandom.nextDouble();
+            if (isPosetive > 0.5) vx=vx*(-1.0);
+
+            double vy = myRandom.nextDouble();
+            while (!(vy > 0.3 && vy < 0.7))
+                vy = myRandom.nextDouble();
+            isPosetive = myRandom.nextDouble();
+            if (isPosetive > 0.5) vy=vy*(-1.0);
+
+            double r = myRandom.nextDouble();
+            while (!(r > 0.1 && r < 0.5))
+                r = myRandom.nextDouble();
+
+		    balls[i]= new Ball(width * x,height * y, vx, vy, r);
+        }
+		collisionOK = new Boolean[nrOfBalls][nrOfBalls];
+        for (int i = 0; i < nrOfBalls; i++ ){
+            for (int j = 0; i < nrOfBalls; i++ ){
+                collisionOK[i][j]=true;
+            }
+        }
+
 	}
 
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
-		for (Ball b : balls) {
+        for (int i = 0; i < nrOfBalls ; i++) {
+            Ball b = balls[i];
 			// detect collision with the border
 			if ( (b.x < b.radius) ) {
 			    b.x=b.radius;
@@ -52,40 +89,23 @@ class Model {
 			b.x += deltaT * b.vx;
 			b.y += deltaT * b.vy;
 
-			for (Ball b2 : balls) {
-                double deltaX = b.x - b2.x, deltaY = b.y - b2.y, collisionDistance = b.radius+b2.radius;
-                if( (deltaX*deltaX + deltaY*deltaY) < collisionDistance*collisionDistance) {
-                    if( (Math.signum(b.vx) + Math.signum(b2.vx) == 0 ) ||
-                            (Math.signum(b.vy) + Math.signum(b2.vy) == 0 ) ||
-                            (  b.x < b2.x && (b2.vx-b.vx<0))||
-                            (  b.x < b2.x && (b.vx-b2.vx<0))||
+			for (int j = 0; j < nrOfBalls ; j++) {
+			    Ball b2 = balls[j];
+			    if(b != b2){
+                    double deltaX = b.x - b2.x, deltaY = b.y - b2.y, collisionDistance = b.radius+b2.radius;
+                    if( (deltaX*deltaX + deltaY*deltaY) < collisionDistance*collisionDistance) {
 
-                            (  b.x > b2.x && (b2.vx-b.vx>0))||
-                            (  b.x > b2.x && (b.vx-b2.vx>0))||
-
-                            (  b.y < b2.y && (b2.vy-b.vy<0))||
-                            (  b.y < b2.y && (b.vy-b2.vy<0))||
-
-                            (  b.y > b2.y && (b2.y-b.vy>0))||
-                            (  b.y > b2.y && (b.vy-b2.vy>0))
-
-                            ){
-                        collision(b, b2);
-                        while ((deltaX*deltaX + deltaY*deltaY) < collisionDistance*collisionDistance){
-                            b.x += deltaT * b.vx;
-                            b.y += deltaT * b.vy;
-                            deltaX = b.x - b2.x;
-                            deltaY = b.y - b2.y;
-                            if ((deltaX*deltaX + deltaY*deltaY) < collisionDistance*collisionDistance){
-                                b2.x += deltaT * b2.vx;
-                                b2.y += deltaT * b2.vy;
-                                deltaX = b.x - b2.x;
-                                deltaY = b.y - b2.y;
-                            }
+                        if(collisionOK[i][j]){
+                            collision(b, b2);
+                            collisionOK[i][j] = false;
+                            collisionOK[j][i] = false;
                         }
-                    }
 
-                }
+                    } else {
+                        collisionOK[i][j] = true;
+                        collisionOK[j][i] = true;
+                    }
+			    }
             }
 		}
 	}
