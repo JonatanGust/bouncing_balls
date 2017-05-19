@@ -12,7 +12,7 @@ package bouncing_balls;
  */
 class Model {
 
-	double areaWidth, areaHeight;
+	double areaWidth, areaHeight, GRAVITY = 9.82;
 
 	Ball [] balls;
 
@@ -30,16 +30,21 @@ class Model {
 		// TODO this method implements one step of simulation with a step deltaT
 		for (Ball b : balls) {
 			// detect collision with the border
-			if (b.x < b.radius || b.x > areaWidth - b.radius) {
+			if ( (b.x < b.radius) && (b.vx < 0) ) {
+				b.vx *= -1; // change direction of ball
+			}else if( (b.x > areaWidth - b.radius) && (b.vx > 0 ) ){
 				b.vx *= -1; // change direction of ball
 			}
-			if (b.y < b.radius || b.y > areaHeight - b.radius) {
-				b.vy *= -1;
+			if ( (b.y < b.radius) && (b.vy < 0) ) {
+				b.vy *= -1; // change direction of ball
+			}else if( (b.y > (areaHeight - b.radius) ) && (b.vy > 0 ) ){
+				b.vy *= -1; // change direction of ball
 			}
 
 			// compute new position according to the speed of the ball
 			b.x += deltaT * b.vx;
 			b.y += deltaT * b.vy;
+			b.vy-= deltaT * GRAVITY;
 		}
 	}
 
