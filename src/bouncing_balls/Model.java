@@ -60,20 +60,20 @@ class Model {
 		// TODO this method implements one step of simulation with a step deltaT
 		for (Ball b : balls) {
 			// detect collision with the border
-			if ( (b.x < b.radius) ) {
-			    b.x=b.radius;
-			    if( (b.vx < 0) )b.vx *= -1; // change direction of ball
-			}else if( (b.x > (areaWidth - b.radius)) ){
-			    b.x=areaWidth - b.radius;
-				if (b.vx > 0 )b.vx *= -1; // change direction of ball
-			}
-			if ( (b.y < b.radius) ) {
-			    b.y=b.radius;
-			    if(b.vy < 0)b.vy *= -1; // change direction of ball
-			}else if( (b.y > (areaHeight - b.radius) )  ){
-			    b.y=(areaHeight - b.radius);
-				if(b.vy > 0 )b.vy *= -1; // change direction of ball
-			}
+            if ( (b.x < b.radius) ) {
+                b.x=b.radius;
+                if( (b.vx < 0) )b.vx *= -1; // change direction of ball
+            }else if( (b.x > (areaWidth - b.radius)) ){
+                b.x=areaWidth - b.radius;
+                if (b.vx > 0 )b.vx *= -1; // change direction of ball
+            }
+            if ( (b.y < b.radius) ) {
+                b.y=b.radius;
+                if(b.vy < 0)b.vy *= -1; // change direction of ball
+            }else if( (b.y > (areaHeight - b.radius) )  ){
+                b.y=(areaHeight - b.radius);
+                if(b.vy > 0 )b.vy *= -1; // change direction of ball
+            }
 
 			// compute new position according to the speed of the ball
             b.vy += deltaT * GRAVITY;//Applying acceleration after movement gives increase in total momentum
