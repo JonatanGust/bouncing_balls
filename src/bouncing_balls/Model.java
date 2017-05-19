@@ -13,6 +13,7 @@ import java.math.*;
  */
 class Model {
 
+	double GRAVITY = 9.82;
 	double areaWidth, areaHeight;
 	
 	Ball [] balls;
@@ -24,35 +25,45 @@ class Model {
 		// Initialize the model with a few balls
 		balls = new Ball[2];
 		balls[0] = new Ball(width / 3, height * 0.5,
-				1.5, 1, 0.3,0,-9.82,5);
+				1.5, 0.5, 0.3,0,-GRAVITY,5);
 		balls[1] = new Ball(2 * width / 3, height * 0.7,
-				-2, 1, 0.4,0,-9.82, 10);
+				-2, -0.2, 0.4,0,-GRAVITY, 10);
 	}
 
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
 		for (Ball b : balls) {
 			// detect collision with the border
+			double u = b.vy;
 			if ( (b.x < b.radius) || (b.x > (areaWidth - b.radius)) ) {
 				b.vx *= -1; // change direction of ball
-				if(b.x > (areaWidth-b.radius)){b.x = (areaWidth - b.radius) - 2*(b.x - (areaWidth - b.radius));}
+				if(b.x > (areaWidth-b.radius)){b.x = (areaWidth - b.radius) - (b.x - (areaWidth - b.radius));}
 				else if(b.x < b.radius){b.x = b.radius + (b.radius - b.x);}
 			}
 			if (b.y < b.radius || b.y > areaHeight - b.radius) {
 				b.vy *= -1;
-				if(b.y > (areaHeight-b.radius)){b.y = (areaHeight - b.radius) - 2*(b.y - (areaHeight - b.radius));}
+				if(b.y > (areaHeight-b.radius)){b.y = (areaHeight - b.radius) - (b.y - (areaHeight - b.radius));}
 				else if(b.y < b.radius){b.y = b.radius + (b.radius - b.y);}
 			}
 			//compute new speed of ball
 			b.vx += (deltaT * b.ax);
 			b.vy += (deltaT * b.ay);
-
+			double x = b.y;
 			// compute new position according to the speed of the ball
 			b.x += (deltaT * b.vx);
 			b.y += (deltaT * b.vy);
+			double v = b.vy;
+			/*if(u>=0 && v<=0 && b == balls[0]){
+				if(b == balls[0]) System.out.print("Ball-1 ");
+				else System.out.print("Ball-2 ");
+				System.out.println("max heigth = "+x);
+			}*/
+
 
 		}
+
 		if(isCollision()){
+
 			//Reset balls to not be collided
 			double resetTicks=0;
 			while(!isCollisionNoMore()){
@@ -168,26 +179,27 @@ class Model {
 		}
 	}
 	private boolean isCollision(){
+		//return false;
 		return Math.sqrt(
 				Math.pow(balls[0].x-balls[1].x,2)+
 						Math.pow(balls[0].y-balls[1].y,2))
-				< ((balls[0].radius+balls[1].radius)-0.05*(balls[0].radius+balls[1].radius));
+				< (balls[0].radius+balls[1].radius);
 	}
 	private boolean isCollisionNoMore(){
 		return Math.sqrt(
 				Math.pow(balls[0].x-balls[1].x,2)+
 						Math.pow(balls[0].y-balls[1].y,2))
-				>= (balls[0].radius+balls[1].radius);
+				>= ((balls[0].radius+balls[1].radius)-0.05*(balls[0].radius+balls[1].radius));
 	}
 	private void velocityChanger(Ball b1, double v1, Ball b2, double v2, double sina, double b1xPolarity, double b1yPolarity, double b2xPolarity, double b2yPolarity){
 		double y1 = sina*v1;
 		double x1 = Math.sqrt( Math.pow(v1,2) - Math.pow(y1,2) );
-		b1.vx += b1xPolarity * x1;
-		b1.vy += b1yPolarity * y1;
+		b1.vx += (b1xPolarity * x1);
+		b1.vy += (b1yPolarity * y1);
 		double y2 = sina*v2;
 		double x2 = Math.sqrt(Math.pow(v2,2)-Math.pow(y2,2));
-		b2.vx += b2xPolarity * x2;
-		b2.vy += b2yPolarity * y2;
+		b2.vx += (b2xPolarity * x2);
+		b2.vy += (b2yPolarity * y2);
 	}
 	
 	/**
