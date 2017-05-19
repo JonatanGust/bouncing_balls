@@ -1,6 +1,7 @@
 package bouncing_balls;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * The physics model.
@@ -16,17 +17,44 @@ class Model {
 
 	double areaWidth, areaHeight, GRAVITY = -9.82;
 
-	Ball [] balls;
+    Ball [] balls;
+    int nrOfBalls = 4;
+    Random myRandom = new Random();
 
-	Model(double width, double height) {
-		areaWidth = width;
-		areaHeight = height;
+    Model(double width, double height) {
+        areaWidth = width;
+        areaHeight = height;
 
-		// Initialize the model with a few balls
-		balls = new Ball[2];
-		balls[0] = new Ball(width / 3, height * 0.9, .3, .4, 0.2);
-		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);
-	}
+        // Initialize the model with a few balls
+        balls = new Ball[nrOfBalls];
+        for(int i = 0; i < nrOfBalls; i++ ){
+            double x = myRandom.nextDouble();
+            while (!(x > 0.3 && x < 0.7))
+                x = myRandom.nextDouble();
+
+            double y = myRandom.nextDouble();
+            while (!(y > 0.3 && y < 0.7))
+                y = myRandom.nextDouble();
+
+            double vx = myRandom.nextDouble();
+            while (!(vx > 0.3 && vx < 0.7))
+                vx = myRandom.nextDouble();
+            double isPosetive = myRandom.nextDouble();
+            if (isPosetive > 0.5) vx=vx*(-1.0);
+
+            double vy = myRandom.nextDouble();
+            while (!(vy > 0.3 && vy < 0.7))
+                vy = myRandom.nextDouble();
+            isPosetive = myRandom.nextDouble();
+            if (isPosetive > 0.5) vy=vy*(-1.0);
+
+            double r = myRandom.nextDouble();
+            while (!(r > 0.1 && r < 0.5))
+                r = myRandom.nextDouble();
+
+            balls[i]= new Ball(width * x,height * y, vx, vy, r);
+        }
+    }
 
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
