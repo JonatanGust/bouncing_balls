@@ -95,15 +95,14 @@ class Model {
                     double deltaX = b.x - b2.x, deltaY = b.y - b2.y, collisionDistance = b.radius+b2.radius;
                     if( (deltaX*deltaX + deltaY*deltaY) < collisionDistance*collisionDistance) {
 
-                        if(collisionOK[i][j]){
-                            collision(b, b2);
-                            collisionOK[i][j] = false;
-                            collisionOK[j][i] = false;
-                        }
+                        double b1NewX = b.x+b.vx*deltaT;
+                        double b1NewY = b.y+b.vy*deltaT;
 
-                    } else {
-                        collisionOK[i][j] = true;
-                        collisionOK[j][i] = true;
+                        double b2NewX = b2.x+b2.vx*deltaT;
+                        double b2NewY = b2.y+b2.vy*deltaT;
+
+                        double newDeltaX = b1NewX - b2NewX, newDeltaY = b1NewY - b2.y;
+
                     }
 			    }
             }
