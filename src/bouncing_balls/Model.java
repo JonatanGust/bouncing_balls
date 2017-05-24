@@ -19,14 +19,14 @@ class Model {
 
 	Ball [] balls;
 	Boolean [][] collisionOK;
-	int nrOfBalls = 4;
+	int nrOfBalls = 2;
 	Random myRandom = new Random();
 
 	Model(double width, double height) {
 		areaWidth = width;
 		areaHeight = height;
 
-		// Initialize the model with a few balls
+		// Initialize the model with a few balls randomized balls
 		balls = new Ball[nrOfBalls];
 		for(int i = 0; i < nrOfBalls; i++ ){
             double x = myRandom.nextDouble();
@@ -38,19 +38,19 @@ class Model {
                 y = myRandom.nextDouble();
 
             double vx = myRandom.nextDouble();
-            while (!(vx > 0.3 && vx < 0.7))
+            while (!(vx > 0.7 && vx < 1.2))
                 vx = myRandom.nextDouble();
             double isPosetive = myRandom.nextDouble();
             if (isPosetive > 0.5) vx=vx*(-1.0);
 
             double vy = myRandom.nextDouble();
-            while (!(vy > 0.3 && vy < 0.7))
+            while (!(vy > 0.5 && vy < 0.9))
                 vy = myRandom.nextDouble();
             isPosetive = myRandom.nextDouble();
             if (isPosetive > 0.5) vy=vy*(-1.0);
 
             double r = myRandom.nextDouble();
-            while (!(r > 0.1 && r < 0.4))
+            while (!(r > 0.3 && r < 0.6))
                 r = myRandom.nextDouble();
 
 		    balls[i]= new Ball(width * x,height * y, vx, vy, r);
@@ -90,8 +90,8 @@ class Model {
 			b.y += deltaT * b.vy;
 
 			for (int j = 0; j < nrOfBalls ; j++) {
-			    Ball b2 = balls[j];
-			    if(b != b2){
+			    if(i != j){
+                    Ball b2 = balls[j];
                     double deltaX = b.x - b2.x, deltaY = b.y - b2.y, collisionDistance = b.radius+b2.radius;
                     if( (deltaX*deltaX + deltaY*deltaY) < collisionDistance*collisionDistance) {
 
