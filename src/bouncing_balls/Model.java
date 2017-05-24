@@ -66,26 +66,22 @@ class Model {
 
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
-        for (Ball b:balls
-             ) {
-            b.bounceable=true;
-        }
         for (int i = 0; i < nrOfBalls ; i++) {
             Ball b = balls[i];
 			// detect collision with the border
 			if ( (b.x < b.radius) ) {
 			    b.x=b.radius;
-			    if( (b.vx < 0) ){b.vx *= -1; b.bounceable = false;} // change direction of ball
+			    if( (b.vx < 0) )b.vx *= -1; // change direction of ball
 			}else if( (b.x > (areaWidth - b.radius)) ){
 			    b.x=areaWidth - b.radius;
-				if (b.vx > 0 ){b.vx *= -1; b.bounceable = false;} // change direction of ball
+				if (b.vx > 0 )b.vx *= -1; // change direction of ball
 			}
 			if ( (b.y < b.radius) ) {
 			    b.y=b.radius;
-			    if(b.vy < 0){b.vy *= -1; b.bounceable = false;} // change direction of ball
+			    if(b.vy < 0)b.vy *= -1; // change direction of ball
 			}else if( (b.y > (areaHeight - b.radius) )  ){
 			    b.y=(areaHeight - b.radius);
-				if(b.vy > 0 ){b.vy *= -1; b.bounceable = false;} // change direction of ball
+				if(b.vy > 0 )b.vy *= -1; // change direction of ball
 			}
 
 			// compute new position according to the speed of the ball
@@ -106,7 +102,7 @@ class Model {
                         double b2NewY = b2.y+b2.vy*deltaT;
 
                         double newDeltaX = b1NewX - b2NewX, newDeltaY = b1NewY - b2NewY;
-                        if((newDeltaX*newDeltaX + newDeltaY*newDeltaY) < (deltaX*deltaX + deltaY*deltaY) ){collision(b,b2); b.bounceable = false; b2.bounceable=false;}
+                        if((newDeltaX*newDeltaX + newDeltaY*newDeltaY) < (deltaX*deltaX + deltaY*deltaY) )collision(b,b2);
 
 
                     }
@@ -132,7 +128,7 @@ class Model {
 		 * Position, speed, and radius of the ball. You may wish to add other attributes.
 		 */
 		double x, y, vx, vy, radius, r, angle;
-        boolean bounceable = true;
+        
 
         public void rectToPolar() {
             r = Math.sqrt(vx * vx + vy * vy);
