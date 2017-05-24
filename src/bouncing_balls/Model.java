@@ -19,7 +19,7 @@ class Model {
 
 	Ball [] balls;
 	Boolean [][] collisionOK;
-	int nrOfBalls = 5;
+	int nrOfBalls = 10;
 	Random myRandom = new Random();
 
 	Model(double width, double height) {
@@ -50,7 +50,7 @@ class Model {
             if (isPosetive > 0.5) vy=vy*(-1.0);
 
             double r = myRandom.nextDouble();
-            while (!(r > 0.2 && r < 0.5))
+            while (!(r > 0.2 && r < 0.3))
                 r = myRandom.nextDouble();
 
 		    balls[i]= new Ball(width * x,height * y, vx, vy, r);
@@ -66,22 +66,26 @@ class Model {
 
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
+        for (Ball b:balls
+             ) {
+            b.bounceable=true;
+        }
         for (int i = 0; i < nrOfBalls ; i++) {
             Ball b = balls[i];
 			// detect collision with the border
 			if ( (b.x < b.radius) ) {
 			    b.x=b.radius;
-			    if( (b.vx < 0) )b.vx *= -1; // change direction of ball
+			    if( (b.vx < 0) ){b.vx *= -1; b.bounceable = false;} // change direction of ball
 			}else if( (b.x > (areaWidth - b.radius)) ){
 			    b.x=areaWidth - b.radius;
-				if (b.vx > 0 )b.vx *= -1; // change direction of ball
+				if (b.vx > 0 ){b.vx *= -1; b.bounceable = false;} // change direction of ball
 			}
 			if ( (b.y < b.radius) ) {
 			    b.y=b.radius;
-			    if(b.vy < 0)b.vy *= -1; // change direction of ball
+			    if(b.vy < 0){b.vy *= -1; b.bounceable = false;} // change direction of ball
 			}else if( (b.y > (areaHeight - b.radius) )  ){
 			    b.y=(areaHeight - b.radius);
-				if(b.vy > 0 )b.vy *= -1; // change direction of ball
+				if(b.vy > 0 ){b.vy *= -1; b.bounceable = false;} // change direction of ball
 			}
 
 			// compute new position according to the speed of the ball
@@ -102,7 +106,7 @@ class Model {
                         double b2NewY = b2.y+b2.vy*deltaT;
 
                         double newDeltaX = b1NewX - b2NewX, newDeltaY = b1NewY - b2NewY;
-                        if((newDeltaX*newDeltaX + newDeltaY*newDeltaY) < (deltaX*deltaX + deltaY*deltaY) )collision(b,b2);
+                        if((newDeltaX*newDeltaX + newDeltaY*newDeltaY) < (deltaX*deltaX + deltaY*deltaY) ){collision(b,b2); b.bounceable = false; b2.bounceable=false;}
 
 
                     }
@@ -128,6 +132,7 @@ class Model {
 		 * Position, speed, and radius of the ball. You may wish to add other attributes.
 		 */
 		double x, y, vx, vy, radius, r, angle;
+        boolean bounceable = true;
 
         public void rectToPolar() {
             r = Math.sqrt(vx * vx + vy * vy);
@@ -147,32 +152,6 @@ class Model {
         }
 	}
 
-    class Point {
-
-        public Point(Ball myBall) {
-            this.ball = myBall;
-        }
-
-        double x, y, r, angle;
-        Ball ball;
-
-        public void rectToPolar() {
-            r = Math.sqrt(x * x + y * y);
-            angle = Math.atan(y / x);
-            if (x < 0) angle += Math.PI;
-        }
-
-        public void polarToRect() {
-            x = r * Math.cos(angle);
-            y = r * Math.sin(angle);
-        }
-
-        public void rotate(double rotateAngle) {
-            rectToPolar();
-            angle += rotateAngle;
-            polarToRect();
-        }
-    }
 
     public void collision(Ball b1, Ball b2) {
         double deltaX = b1.x - b2.x, deltaY = b1.y - b2.y;
