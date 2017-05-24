@@ -19,7 +19,7 @@ class Model {
 
 	Ball [] balls;
 	Boolean [][] collisionOK;
-	int nrOfBalls = 10;
+	int nrOfBalls = 2;
 	Random myRandom = new Random();
 
 	Model(double width, double height) {
@@ -50,7 +50,7 @@ class Model {
             if (isPosetive > 0.5) vy=vy*(-1.0);
 
             double r = myRandom.nextDouble();
-            while (!(r > 0.2 && r < 0.3))
+            while (!(r > (0.9/(double)nrOfBalls) && r < 0.6))
                 r = myRandom.nextDouble();
 
 		    balls[i]= new Ball(width * x,height * y, vx, vy, r);
